@@ -78,18 +78,18 @@ int main(int argc, char *argv[]){
 		Eigen::AngleAxisd rotationVector_1(theta,axis);
     	R=rotationVector_1.toRotationMatrix();
 
-		// rotate the point
-		B = (R * B.transpose()).transpose();
-
 		// translate the point
 		for( int jj =0; jj< N_pt; jj++){
     	    B.block<1,3>(jj,0) = B.block<1,3>(jj,0) - t.transpose();
     	}
 
+		// rotate the point
+		B = (R * B.transpose()).transpose();
+
 		A = B;
 
 		// noise
-    	B += Eigen::MatrixXd::Random(N_pt,3) * noise_sigma;
+    	//B += Eigen::MatrixXd::Random(N_pt,3) * noise_sigma;
 
 		// shuffle
     	my_random_shuffle(B);
@@ -300,6 +300,7 @@ void test_icp4(Eigen::MatrixXd B)
 
 	// solve the ICP problem
     icp_result = icp(B, A_, 20,  0.000001);
+    //icp_result = icp(A_, B, 20,  0.000001);
 
 	// get Transformation matrix
     T = icp_result.trans;
