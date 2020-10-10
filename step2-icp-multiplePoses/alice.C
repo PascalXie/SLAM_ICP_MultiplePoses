@@ -27,11 +27,11 @@ Eigen::MatrixXd A_ = Eigen::MatrixXd::Random(N_pt,3);
 
 unsigned GetTickCount()
 {
-        struct timeval tv;
-        if(gettimeofday(&tv, NULL) != 0)
-                return 0;
+		struct timeval tv;
+		if(gettimeofday(&tv, NULL) != 0)
+				return 0;
 
-        return (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+		return (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 }
 
 
@@ -47,17 +47,17 @@ int main(int argc, char *argv[]){
 //		Eigen::Vector3d axis = Eigen::Vector3d::Random();
 //		int isUnifromationGood = uniform(axis);
 //
-//    	test_icp3(theta, axis);
+//		test_icp3(theta, axis);
 //	}
 //
 //	file.close();
 
-    Eigen::MatrixXd A = A_;
-    Eigen::MatrixXd B;
-    Eigen::MatrixXd C;
-    Eigen::Vector3d t;
-    Eigen::Matrix3d R;
-    Eigen::Matrix4d T;
+	Eigen::MatrixXd A = A_;
+	Eigen::MatrixXd B;
+	Eigen::MatrixXd C;
+	Eigen::Vector3d t;
+	Eigen::Matrix3d R;
+	Eigen::Matrix4d T;
 
 
 	for(int i=0;i<6;i++)
@@ -76,12 +76,12 @@ int main(int argc, char *argv[]){
 		int isUnifromationGood = uniform(axis);
 
 		Eigen::AngleAxisd rotationVector_1(theta,axis);
-    	R=rotationVector_1.toRotationMatrix();
+		R=rotationVector_1.toRotationMatrix();
 
 		// translate the point
 		for( int jj =0; jj< N_pt; jj++){
-    	    B.block<1,3>(jj,0) = B.block<1,3>(jj,0) - t.transpose();
-    	}
+			B.block<1,3>(jj,0) = B.block<1,3>(jj,0) - t.transpose();
+		}
 
 		// rotate the point
 		B = (R * B.transpose()).transpose();
@@ -89,10 +89,10 @@ int main(int argc, char *argv[]){
 		A = B;
 
 		// noise
-    	//B += Eigen::MatrixXd::Random(N_pt,3) * noise_sigma;
+		//B += Eigen::MatrixXd::Random(N_pt,3) * noise_sigma;
 
 		// shuffle
-    	my_random_shuffle(B);
+		my_random_shuffle(B);
 
 		// debug
 		cout<<"\n----"<<endl;
@@ -105,14 +105,14 @@ int main(int argc, char *argv[]){
 		cout<<"Rotation angle: "<<theta/M_PI*180.<<" deg"<<endl;
 		cout<<"Rotation axis: "<<axis.transpose()<<endl;
 
-    	test_icp4(B);
+		test_icp4(B);
 
 		// next
 		A_ = A;
 	}
 
 
-    return 0;
+	return 0;
 }
 
 
@@ -122,39 +122,39 @@ int main(int argc, char *argv[]){
 
 // 0-1 float variables
 float my_random(void){
-    float tmp = rand()%100;
-    return tmp/1000;
+	float tmp = rand()%100;
+	return tmp/1000;
 }
 
 void my_random_shuffle(Eigen::MatrixXd &matrix){
-    int row = matrix.rows();
-    vector<Eigen::Vector3d> temp;
-    for(int jj=0; jj < row; jj++){
-        temp.push_back(matrix.block<1,3>(jj,0));
-    }
-    random_shuffle(temp.begin(),temp.end());
-    for(int jj=0; jj < row; jj++){
-        matrix.block<1,3>(jj,0) = temp[jj].transpose();
-        // cout << temp[jj].transpose() << endl;
-        // cout << "row  " << row << endl;
-    }
+	int row = matrix.rows();
+	vector<Eigen::Vector3d> temp;
+	for(int jj=0; jj < row; jj++){
+		temp.push_back(matrix.block<1,3>(jj,0));
+	}
+	random_shuffle(temp.begin(),temp.end());
+	for(int jj=0; jj < row; jj++){
+		matrix.block<1,3>(jj,0) = temp[jj].transpose();
+		// cout << temp[jj].transpose() << endl;
+		// cout << "row  " << row << endl;
+	}
 }
 
 
 Eigen::Matrix3d rotation_matrix(Eigen::Vector3d axis, float theta){
-    axis = axis / sqrt(axis.transpose()*axis);
-    float a = cos(theta/2);
-    Eigen::Vector3d temp = -axis*sin(theta/2);
-    float b,c,d;
-    b = temp(0);
-    c = temp(1);
-    d = temp(2);
-    Eigen::Matrix3d R;
-    R << a*a+b*b-c*c-d*d, 2*(b*c-a*d), 2*(b*d+a*c),
-        2*(b*c+a*d), a*a+c*c-b*b-d*d, 2*(c*d-a*b),
-        2*(b*d-a*c), 2*(c*d+a*b), a*a+d*d-b*b-c*c;
+	axis = axis / sqrt(axis.transpose()*axis);
+	float a = cos(theta/2);
+	Eigen::Vector3d temp = -axis*sin(theta/2);
+	float b,c,d;
+	b = temp(0);
+	c = temp(1);
+	d = temp(2);
+	Eigen::Matrix3d R;
+	R << a*a+b*b-c*c-d*d, 2*(b*c-a*d), 2*(b*d+a*c),
+		2*(b*c+a*d), a*a+c*c-b*b-d*d, 2*(c*d-a*b),
+		2*(b*d-a*c), 2*(c*d+a*b), a*a+d*d-b*b-c*c;
 
-    return R;
+	return R;
 }
 
 
@@ -163,7 +163,7 @@ Eigen::Matrix3d rotation_matrix_zAxis(float theta)
 	double c = cos(theta);
 	double s = sin(theta);
 
-    Eigen::Matrix3d R;
+	Eigen::Matrix3d R;
 	R<< c, s, 0.,
 		-1.*s, c, 0.,
 		0., 0., 1.;
@@ -197,16 +197,16 @@ void test_icp3(double theta, Eigen::Vector3d axis)
 	cout<<"---- "<<endl;
 
 	// variables that will be used in this function
-    Eigen::MatrixXd A = Eigen::MatrixXd::Random(N_pt,3);
-    Eigen::MatrixXd B;
-    Eigen::MatrixXd C;
-    Eigen::Vector3d t;
-    Eigen::Matrix3d R;
-    Eigen::Matrix4d T;
-    Eigen::Vector3d t1;
-    Eigen::Matrix3d R1;
-    ICP_OUT icp_result;
-    std::vector<float> dist;
+	Eigen::MatrixXd A = Eigen::MatrixXd::Random(N_pt,3);
+	Eigen::MatrixXd B;
+	Eigen::MatrixXd C;
+	Eigen::Vector3d t;
+	Eigen::Matrix3d R;
+	Eigen::Matrix4d T;
+	Eigen::Vector3d t1;
+	Eigen::Matrix3d R1;
+	ICP_OUT icp_result;
+	std::vector<float> dist;
 
 	// debug
 	cout<<"\n----"<<endl;
@@ -215,39 +215,39 @@ void test_icp3(double theta, Eigen::Vector3d axis)
 	//cout<<"Matrix A \n"<<A<<endl;
 	// !debug
 
-    B = A;
-    //t = Eigen::Vector3d::Random()*translation;
+	B = A;
+	//t = Eigen::Vector3d::Random()*translation;
 	t << -0.2,0.8,0.3;
 
 	// rotation
 	Eigen::AngleAxisd rotationVector_1(theta,axis);
-    R=rotationVector_1.toRotationMatrix();
+	R=rotationVector_1.toRotationMatrix();
 	//cout<<"Rotation Matrix R \n"<<R<<endl;
 
-    B = (R * B.transpose()).transpose();
+	B = (R * B.transpose()).transpose();
 
 	// translation 
 	//cout<<"Translation vector t \n"<<t.transpose()<<endl;
-    for( int jj =0; jj< N_pt; jj++){
-        B.block<1,3>(jj,0) = B.block<1,3>(jj,0) - t.transpose();
-    }
+	for( int jj =0; jj< N_pt; jj++){
+		B.block<1,3>(jj,0) = B.block<1,3>(jj,0) - t.transpose();
+	}
 
 	// noise
-    B += Eigen::MatrixXd::Random(N_pt,3) * noise_sigma;
+	B += Eigen::MatrixXd::Random(N_pt,3) * noise_sigma;
 	//cout<<"Measured Points that have been translated and biased: \n"<<B<<endl;
 
-    // shuffle
-    my_random_shuffle(B);
+	// shuffle
+	my_random_shuffle(B);
 
 	// solve the ICP problem
-    icp_result = icp(B, A, 20,  0.000001);
-    //icp_result = icp(A, B, 20,  0.000001);
+	icp_result = icp(B, A, 20,  0.000001);
+	//icp_result = icp(A, B, 20,  0.000001);
 
 	// get Transformation matrix
-    T = icp_result.trans;
+	T = icp_result.trans;
 
 	// get translation vector
-    Eigen::Vector3d t_estimated = T.block<3,1>(0,3);
+	Eigen::Vector3d t_estimated = T.block<3,1>(0,3);
 
 	// get Rotation Matrix
 	Eigen::Matrix3d R_estimated_reverse = T.block<3,3>(0,0);
@@ -295,18 +295,18 @@ void test_icp3(double theta, Eigen::Vector3d axis)
 
 void test_icp4(Eigen::MatrixXd B)
 {
-    Eigen::Matrix4d T;
-    ICP_OUT icp_result;
+	Eigen::Matrix4d T;
+	ICP_OUT icp_result;
 
 	// solve the ICP problem
-    icp_result = icp(B, A_, 20,  0.000001);
-    //icp_result = icp(A_, B, 20,  0.000001);
+	icp_result = icp(B, A_, 20,  0.000001);
+	//icp_result = icp(A_, B, 20,  0.000001);
 
 	// get Transformation matrix
-    T = icp_result.trans;
+	T = icp_result.trans;
 
 	// get translation vector
-    Eigen::Vector3d t_estimated = T.block<3,1>(0,3);
+	Eigen::Vector3d t_estimated = T.block<3,1>(0,3);
 
 	// get Rotation Matrix
 	Eigen::Matrix3d R_estimated_reverse = T.block<3,3>(0,0);
